@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="kor">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>끝말잇기</title>
+</head>
+<body>
+    <div><span id="order">1</span>번째 참가자</div>
+    <div>제시어: <span id="word"></span> </div>
+    <input type="text" id="text" value=""/>
+    <button>입력</button>
+    <button>취소</button>
+    
+    <script>
+        
+        
+        const number = parseInt(prompt('몇 명이 참가하나요?'));
+
+        const $order = document.querySelector('#order');
+        const $word = document.querySelector('#word');
+        const $input = document.querySelector('input[type=text]');
+        const $button = document.querySelector('button');
+
+        let word; //제시어 변수 저장
+        let newWord; //새로운 제시어 변수 저장
+        
+
+        const onClick = () => {
+            if(!word) {  //제시어가 비어있는 경우(제일 처음 사람만이 가능한 식)
+                word = newWord;   //입력한 단어가 제시어가 된다.
+                $word.textContent = word; //화면에 제시어 표시함. $word.textContent는 태그 내부의 값을 얻거나 수정할 때 사용.                             
+                let nextOrder = Number($order.textContent);   //새로운 순서에 대한 변수 저장
+                $input.value = ''; //입력 태그 value를 사용해 단어가 제시되서 다음 타자에게 넘어가면 사라진다.
+                $input.focus(); //커서는 입력 태그 내부에 위치시킨다.
+                
+            } else {   //비어있지 않다. 그럼 입력한 단어가 올바른가?
+                if (word[word.length - 1] === newWord[0]) { //제시어 마지막 글자와 새로운 단어의 첫글자가 같아야한다. 입력한 단어가 올바른가?
+                    //입력한 단어는 올바르다.
+                    word = newWord; //마지막 글자와 첫글자가 같을 때 현재 단어를 제시어에 저장한다.
+                    $word.textContent = word; //화면에 다시 제시어 표시
+                    let nextOrder = Number($order.textContent);
+                    if (nextOrder + 1 > number) { //순서 변화에 대한 식.
+                    $order.textContent = 1;
+                    } else {
+                    $order.textContent = nextOrder + 1;
+                    }
+                    $input.value = '';
+                    $input.focus();
+                } else { //단어가 올바르지 않다.
+                    alert('단어가 올바르지 않습니다!');
+                    $input.value = '';
+                    $input.focus();
+                    
+                }               
+            }
+        };
+
+        const onInput = (event) => {
+            newWord = event.target.value; //입력한 단어를 현재 단어로.
+        }
+
+        $button.addEventListener('click', onClick);
+        $input.addEventListener('input', onInput);
+    
+    </script>
+</body>
+</html>
